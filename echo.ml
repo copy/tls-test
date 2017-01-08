@@ -8,6 +8,12 @@ let key_path = "../TLS-Attacker/resources/rsa1024key.pem"
 
 let port = 4433
 
+
+let add_to_session_cache cache tls =
+  match Tls.Engine.epoch tls with
+  | `InitialEpoch -> ()
+  | `Epoch epoch -> Hashtbl.replace cache epoch.session_id epoch
+
 let handle_tls tls input =
   let tls_return = Tls.Engine.handle_tls tls input in
   let response = begin match tls_return with
@@ -48,7 +54,7 @@ let handle_tls tls input =
   end in
   response, state
 
-let rec server_loop (socket, tls, buffer) =
+let rec server_loop (socket, tls, buffer, session_cache) =
   let len = Unix.read socket buffer 0 (Bytes.length buffer) in
   if len = 0 then
     prerr_endline "Got unix eof"
@@ -63,14 +69,17 @@ let rec server_loop (socket, tls, buffer) =
     end;
     match state with
     | `Repeat new_tls ->
-      server_loop (socket, new_tls, buffer)
+      add_to_session_cache session_cache new_tls;
+      server_loop (socket, new_tls, buffer, session_cache)
     | `Close -> ()
   end
 
 let main () =
   Nocrypto_entropy_unix.initialize ();
+
   let cert_data = CCIO.File.read_exn cert_path in
   let key_data = CCIO.File.read_exn key_path in
+
   let cert = X509.Encoding.Pem.Certificate.of_pem_cstruct1 @@ Cstruct.of_string cert_data in
   let (`RSA key) = X509.Encoding.Pem.Private_key.of_pem_cstruct1 @@ Cstruct.of_string key_data in
   let ciphers = [
@@ -96,7 +105,19 @@ let main () =
          ; `TLS_RSA_WITH_RC4_128_SHA ] in
   let hashes = [ `MD5 ; `SHA1 ; `SHA224 ; `SHA256 ; `SHA384 ; `SHA512 ] in
   let version = (Tls.Core.TLS_1_0, Tls.Core.TLS_1_2) in
-  let config = Tls.Config.server ~version ~ciphers ~hashes ~reneg:true ~certificates:(`Single ([cert], key)) () in
+
+  let use_session_cache = false in
+  let cache = Hashtbl.create 1024 in
+  let session_cache =
+    if use_session_cache then
+      Some (fun key -> CCHashtbl.get cache key)
+    else
+      None
+  in
+
+  let reneg = false in
+
+  let config = Tls.Config.server ?session_cache ~version ~ciphers ~hashes ~reneg ~certificates:(`Single ([cert], key)) () in
   let tls = Tls.Engine.server config in
 
   let address = Unix.inet_addr_loopback in
@@ -109,11 +130,11 @@ let main () =
   let buffer = Bytes.create (1024 * 1024) in
 
   while true do
-    prerr_endline "Accepting ...";
+    Printf.eprintf "Accepting on port %d ...\n%!" port;
     let socket, source_address = Unix.accept server_socket in
     prerr_endline "Got connection";
     prerr_endline "================================================================================";
-    server_loop (socket, tls, buffer);
+    server_loop (socket, tls, buffer, cache);
     Unix.close socket;
     prerr_endline "Connection closed";
   done
