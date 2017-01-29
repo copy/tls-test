@@ -1,0 +1,96 @@
+ 0/58> test-message-skipping.py                                                        | success:   6 fail:   0      16 
+ 1/58> test-openssl-3712.py                                                            | success:   0 fail:   1      12 
+    - AssertionError: Unexpected message from peer: Alert(warning, no_renegotiation)
+ 2/58> test-fallback-scsv.py                                                           | success:  25 fail:   0      79 
+ 3/58> test-cve-2016-2107.py                                                           | success:   2 fail:   0       9 
+ 4/58> test-truncating-of-kRSA-client-key-exchange.py                                  | success:   2 fail:   0       7 
+ 5/58> test-extended-master-secret-extension.py                                        | success:   8 fail:   6      97 
+    - AssertionError: Unexpected message from peer: Alert(warning, no_renegotiation)
+    - AssertionError: Unexpected message from peer: Handshake(server_hello)
+    - assert state.session_id == srv_hello.session_id
+ 6/58> test-dhe-rsa-key-exchange-signatures.py                                         | success:  20 fail:   7     203 
+    - NotImplementedError
+ 7/58> test-empty-extensions.py                                                        | success:   0 fail:   2      25 
+    - AssertionError: Unexpected message from peer: Alert(fatal, handshake_failure)
+ 8/58> test-record-layer-fragmentation.py                                              | success:  14 fail:   3      78 
+    - AssertionError: Unexpected message from peer: Alert(fatal, handshake_failure)
+    - AssertionError: Unexpected message from peer: Handshake(server_hello)
+ 9/58> test-fuzzed-padding.py                                                          | success:  11 fail:   0      25 
+10/58> test-version-numbers.py                                                         | success:   2 fail:   3      44 
+    - AssertionError: Alert description 47 != 70
+    - AssertionError: Unexpected message from peer: Alert(fatal, illegal_parameter)
+11/58> test-TLSv1_2-rejected-without-TLSv1_2.py                                        | success:   1 fail:   8      94 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello)
+12/58> test-aes-gcm-nonces.py                                                          | success:   4 fail:   0      15 
+13/58> test-rsa-sigs-on-certificate-verify.py                                          | success:   0 fail:  10     114 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello_done)
+14/58> test-SSLv3-padding.py                                                           | success:   0 fail:   1      13 
+    - AssertionError: Unexpected message from peer: Alert(fatal, protocol_version)
+15/58> test-unsupported-cuve-fallback.py                                               | success:   1 fail:   0       6 
+16/58> test-fuzzed-ciphertext.py                                                       | success:  40 fail:   0      83 
+17/58> test-sslv2-force-cipher-3des.py                                                 | success:   3 fail:   0      25 
+18/58> test-early-application-data.py                                                  | success:   3 fail:   0       9 
+19/58> test-zero-length-data.py                                                        | success:   1 fail:   0       5 
+20/58> test-fuzzed-MAC.py                                                              | success:  10 fail:   0      23 
+21/58> test-conversation.py                                                            | success:   2 fail:   0      10 
+22/58> test-invalid-client-hello.py                                                    | success:   7 fail:7923  103016 
+    - AssertionError: Alert description 40 != 50
+    - AssertionError: Alert description 47 != 10
+    - AssertionError: Alert description 47 != 50
+23/58> test-certificate-malformed.py                                                   | success:   0 fail:1139   12534 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello_done)
+24/58> test-certificate-verify-malformed.py                                            | success:   0 fail: 267    2942 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello_done)
+25/58> test-certificate-verify-malformed-sig.py                                        | success:   0 fail:   4      44 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello_done)
+26/58> test-fuzzed-finished.py                                                         | success:   8 fail:   0      19 
+27/58> test-invalid-session-id.py                                                      | success:   1 fail:   0       6 
+28/58> test-hello-request-by-client.py                                                 | success:   1 fail:   0       5 
+29/58> test-extensions.py                                                              | success:  37 fail: 255    3392 
+    - AssertionError: Alert description 47 != 50
+30/58> test-dhe-rsa-key-exchange-with-bad-messages.py                                  | success:   5 fail:   0      24 
+31/58> test-ecdhe-rsa-key-exchange.py                                                  | success:   0 fail:   1      14 
+    - AssertionError: Unexpected message from peer: Alert(fatal, handshake_failure)
+32/58> test-atypical-padding.py                                                        | success:   1 fail:   0       5 
+33/58> test-message-duplication.py                                                     | success:  10 fail:   0      24 
+34/58> test-ecdhe-rsa-key-exchange-with-bad-messages.py                                | success:   0 fail:   8      91 
+    - AssertionError: Unexpected message from peer: Alert(fatal, handshake_failure)
+35/58> test-invalid-client-hello-w-record-overflow.py                                  | success:   7 fail:7923  103016 
+    - AssertionError: Alert description 40 != 50
+    - AssertionError: Alert description 47 != 10
+    - AssertionError: Alert description 47 != 50
+36/58> test-sslv2-force-cipher-non3des.py                                              | success:  18 fail:   0      70 
+37/58> test-sig-algs.py                                                                | success:   7 fail:   7     119 
+    - AssertionError: Alert description 40 != 50
+    - AssertionError: Alert description 47 != 50
+38/58> test-invalid-cipher-suites.py                                                   | success:  25 fail:   0      78 
+39/58> test-bleichenbacher-workaround.py                                               | success:   8 fail:   0      27 
+40/58> test-sessionID-resumption.py                                                    | success:   1 fail:   1      19 
+    - assert state.session_id == srv_hello.session_id
+41/58> test-invalid-content-type.py                                                    | success:   3 fail:   0       9 
+42/58> test-invalid-rsa-key-exchange-messages.py                                       | success:   6 fail:   0      21 
+43/58> test-invalid-compression-methods.py                                             | success:   1 fail:   0       6 
+44/58> test-sslv2-force-export-cipher.py                                               | success:   6 fail:   0      34 
+45/58> test-large-number-of-extensions.py                                              | success:  21 fail:   0      73 
+46/58> test-sslv2hello-protocol.py                                                     | success:   0 fail:   1      35 
+    - AssertionError: Unexpected closure from peer
+    - socket.timeout: timed out
+47/58> test-invalid-version.py                                                         | success:   1 fail:   0       6 
+48/58> test-signature-algorithms.py                                                    | success:  11 fail: 256    3353 
+    - AssertionError: Alert description 40 != 50
+    - AssertionError: Alert description 47 != 50
+49/58> test-sslv2-force-cipher.py                                                      | success:  21 fail:   0      79 
+50/58> test-truncating-of-finished.py                                                  | success:   2 fail:   0       7 
+51/58> test-interleaved-application-data-in-renegotiation.py                           | success:   0 fail:   3      39 
+    - AssertionError: Unexpected message from peer: Alert(warning, no_renegotiation)
+52/58> test-certificate-request.py                                                     | success:   0 fail:   3      42 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello_done)
+53/58> test-sslv2-connection.py                                                        | success:   0 fail:   3      46 
+    - AssertionError: Unexpected message from peer: Alert(fatal, protocol_version)
+54/58> test-truncating-of-client-hello.py                                              | success:  22 fail:   0      69 
+55/58> test-certificate-verify.py                                                      | success:   0 fail:   4      44 
+    - AssertionError: Unexpected message from peer: Handshake(server_hello_done)
+56/58> test-dhe-rsa-key-exchange.py                                                    | success:   1 fail:   0       6 
+57/58> test-interleaved-application-data-and-fragmented-handshakes-in-renegotiation.py | success:   0 fail:   3      43 
+    - AssertionError: Unexpected message from peer: Alert(warning, no_renegotiation)
+32 successful scripts, 26 failed scripts
