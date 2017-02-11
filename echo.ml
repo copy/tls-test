@@ -80,6 +80,7 @@ let main () =
   let cert_data = CCIO.File.read_exn cert_path in
   let key_data = CCIO.File.read_exn key_path in
 
+  (* server configuration *)
   let cert = X509.Encoding.Pem.Certificate.of_pem_cstruct1 @@ Cstruct.of_string cert_data in
   let (`RSA key) = X509.Encoding.Pem.Private_key.of_pem_cstruct1 @@ Cstruct.of_string key_data in
   let ciphers = [
@@ -105,8 +106,11 @@ let main () =
          ; `TLS_RSA_WITH_RC4_128_SHA ] in
   let hashes = [ `MD5 ; `SHA1 ; `SHA224 ; `SHA256 ; `SHA384 ; `SHA512 ] in
   let version = (Tls.Core.TLS_1_0, Tls.Core.TLS_1_2) in
-
   let use_session_cache = false in
+  let reneg = true in
+  let use_authenticator = false in
+  (* server configuration end *)
+
   let cache = Hashtbl.create 1024 in
   let session_cache =
     if use_session_cache then
@@ -115,9 +119,6 @@ let main () =
       None
   in
 
-  let reneg = true in
-
-  let use_authenticator = false in
   let authenticator =
     if use_authenticator then
       (* Bad authenticator *)
