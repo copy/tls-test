@@ -115,9 +115,20 @@ let main () =
       None
   in
 
-  let reneg = false in
+  let reneg = true in
 
-  let config = Tls.Config.server ?session_cache ~version ~ciphers ~hashes ~reneg ~certificates:(`Single ([cert], key)) () in
+  let use_authenticator = false in
+  let authenticator =
+    if use_authenticator then
+      (* Bad authenticator *)
+      Some X509.Authenticator.null
+    else
+      None
+  in
+
+  let config = Tls.Config.server
+      ?session_cache ~version ~ciphers
+      ~hashes ~reneg ~certificates:(`Single ([cert], key)) ?authenticator () in
   let tls = Tls.Engine.server config in
 
   let address = Unix.inet_addr_loopback in
